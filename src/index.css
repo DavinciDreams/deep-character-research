@@ -4,21 +4,53 @@
 
 body {
   font-family: 'Inter', sans-serif;
+  background: #0f172a;
 }
 
+/* Steampunk scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 12px;
 }
 
 ::-webkit-scrollbar-track {
   background: #1e293b;
+  border-left: 1px solid rgba(245, 158, 11, 0.1);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #475569;
-  border-radius: 4px;
+  background: linear-gradient(to bottom, #f59e0b, #d97706);
+  border-radius: 6px;
+  border: 2px solid #1e293b;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #64748b;
+  background: linear-gradient(to bottom, #fbbf24, #f59e0b);
+}
+
+/* Steampunk animations */
+@keyframes cogSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes steamPulse {
+  0%, 100% { opacity: 0.1; }
+  50% { opacity: 0.3; }
+}
+
+@keyframes glowPulse {
+  0%, 100% { filter: brightness(1) drop-shadow(0 0 5px rgba(245, 158, 11, 0.2)); }
+  50% { filter: brightness(1.2) drop-shadow(0 0 10px rgba(245, 158, 11, 0.4)); }
+}
+
+.animate-cog {
+  animation: cogSpin 20s linear infinite;
+}
+
+.animate-steam {
+  animation: steamPulse 3s ease-in-out infinite;
+}
+
+.animate-glow {
+  animation: glowPulse 2s ease-in-out infinite;
 }
