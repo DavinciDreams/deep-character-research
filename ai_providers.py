@@ -6,17 +6,40 @@ from dataclasses import dataclass
 import json
 import os
 from pathlib import Path
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 @dataclass 
 class AIConfig:
     openai_api_key: Optional[str] = None
     openrouter_api_key: Optional[str] = None
     anthropic_api_key: Optional[str] = None
-    lmstudio_base_url: str = "http://localhost:1234"
-    lmstudio_model: str = "local-model"
-    default_provider: str = "openrouter"
-    default_model: str = "nvidia/llama-3.1-nemotron-ultra-253b-v1:free"
-    fallback_enabled: bool = True
+    lmstudio_base_url: str = None
+    lmstudio_model: str = None
+    default_provider: str = None
+    default_model: str = None
+    fallback_enabled: bool = None
+    
+    def __post_init__(self):
+        """Load values from environment variables if not provided"""
+        if self.openai_api_key is None:
+            self.openai_api_key = os.getenv("OPENAI_API_KEY")
+        if self.openrouter_api_key is None:
+            self.openrouter_api_key = os.getenv("OPENROUTER_API_KEY")
+        if self.anthropic_api_key is None:
+            self.anthropic_api_key = os.getenv("ANTHROPIC_API_KEY")
+        if self.lmstudio_base_url is None:
+            self.lmstudio_base_url = os.getenv("LMSTUDIO_BASE_URL", "http://localhost:1234")
+        if self.lmstudio_model is None:
+            self.lmstudio_model = os.getenv("LMSTUDIO_MODEL", "local-model")
+        if self.default_provider is None:
+            self.default_provider = os.getenv("DEFAULT_AI_PROVIDER", "openrouter")
+        if self.default_model is None:
+            self.default_model = os.getenv("DEFAULT_MODEL", "nvidia/llama-3.1-nemotron-ultra-253b-v1:free")
+        if self.fallback_enabled is None:
+            self.fallback_enabled = os.getenv("FALLBACK_ENABLED", "true").lower() == "true"
 
 class BaseAIProvider:
     def __init__(self, config: AIConfig):
