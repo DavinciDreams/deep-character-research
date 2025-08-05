@@ -11,6 +11,54 @@ class DocumentStore:
         self.db_path = db_path
         Path(db_path).parent.mkdir(parents=True, exist_ok=True)
         self._init_database()
+
+    def get_characters(
+        self,
+        start_time: Optional[str] = None,
+        end_time: Optional[str] = None,
+        doc_type: Optional[str] = None
+    ) -> List[Dict[str, Any]]:
+        """
+        Fetch characters with optional filtering by created_at and document type.
+        - start_time, end_time: ISO 8601 strings for created_at filtering.
+        - doc_type: filters characters that have at least one document with source_type == doc_type.
+        """
+        query = """
+            SELECT DISTINCT c.id, c.name, c.created_at
+            FROM characters c
+            {join_clause}
+            WHERE 1=1
+            {time_clause}
+            {type_clause}
+            ORDER BY c.created_at DESC
+        """
+        join_clause = ""
+        time_clause = ""
+        type_clause = ""
+        params = []
+
+        if doc_type:
+            join_clause = "LEFT JOIN documents d ON d.character_id = c.id"
+            type_clause = " AND d.source_type = ?"
+            params.append(doc_type)
+
+        if start_time:
+            time_clause += " AND c.created_at >= ?"
+            params.append(start_time)
+        if end_time:
+            time_clause += " AND c.created_at <= ?"
+            params.append(end_time)
+
+        final_query = query.format(
+            join_clause=join_clause,
+            time_clause=time_clause,
+            type_clause=type_clause
+        )
+
+        with sqlite3.connect(self.db_path) as conn:
+            conn.row_factory = sqlite3.Row
+            cursor = conn.execute(final_query, params)
+            return [dict(row) for row in cursor.fetchall()]
     
     def _init_database(self):
         """Initialize SQLite database"""
