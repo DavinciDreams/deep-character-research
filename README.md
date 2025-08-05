@@ -298,6 +298,31 @@ If you encounter issues:
 3. Verify your API keys are valid
 4. Check that you have internet connectivity for research
 
+## 🐳 Docker: Build & Run FastAPI Backend
+
+### Build the Docker Image
+
+```bash
+docker build -t deep-character-research-backend .
+```
+
+### Run the Docker Container
+
+To run the backend and expose port 8000, mapping your local `.env` file:
+
+```bash
+docker run --env-file .env -p 8000:8000 deep-character-research-backend
+```
+
+- `--env-file .env` ensures environment variables are loaded from your local `.env` file.
+- `-p 8000:8000` maps container port 8000 to your host, so the FastAPI app is accessible at [http://localhost:8000](http://localhost:8000).
+
+#### Notes on Environment Variables
+
+- The backend requires API keys and configuration in a `.env` file (see `.env.example` for required variables).
+- If you update `.env`, restart the container to apply changes.
+- Never commit sensitive keys to version control.
+
 ---
 
 **Start your journey through history! Research any historical figure and engage in authentic conversations that bring the past to life.** 🚀📚
