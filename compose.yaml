@@ -6,9 +6,15 @@ services:
     container_name: python-backend
     restart: unless-stopped
     init: true
-    # env_file: ./.env  # Uncomment if .env file exists
+    env_file: ./.env
     ports:
       - "8000:8000"
+    volumes:
+      - ./data:/app/data
     networks:
       - app-net
     # The backend exposes FastAPI on port 8000
+
+networks:
+  app-net:
+    driver: bridge
