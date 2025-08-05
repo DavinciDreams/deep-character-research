@@ -2,14 +2,15 @@ import os
 import uuid
 import logging
 import asyncio
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException, Request, Query
 from pydantic import BaseModel
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from deep_character_researcher import DeepCharacterResearcher
 from config import ResearchConfig
-from typing import Dict, Any
+from typing import Dict, Any, Optional, List
+from storage import DocumentStore
 
 app = FastAPI()
 
@@ -90,6 +91,28 @@ async def get_research_result(task_id: str):
         return JSONResponse(status_code=500, content={"task_id": task_id, "error": task["result"]})
     else:
         raise HTTPException(status_code=202, detail="Task not completed yet")
+
+@app.get("/api/characters")
+async def get_characters(
+    start_time: Optional[str] = Query(None, description="Filter by created_at >= start_time (ISO 8601)"),
+    end_time: Optional[str] = Query(None, description="Filter by created_at <= end_time (ISO 8601)"),
+    type: Optional[str] = Query(None, description="Filter by document source_type")
+):
+    """
+    Returns a list of researched characters, optionally filtered by start_time, end_time, and type.
+    """
+    try:
+        config = get_config_from_env()
+        db_path = getattr(config, "db_path", "data/characters.sqlite")
+        store = DocumentStore(db_path)
+        characters = store.get_characters(
+            start_time=start_time,
+            end_time=end_time,
+            doc_type=type
+        )
+        return {"characters": characters}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to fetch characters: {e}")
 
 # --- Chat API ---
 
