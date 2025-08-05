@@ -7,3 +7,4 @@ logs/
 data/document_store/
 data/vector_db/node_modules/
 .env
+node_modules/
