@@ -1,0 +1,19 @@
+{
+	"inputs": [],
+	"servers": {
+		"openrouterai": {
+			"command": "npx",
+			"args": [
+				"@mcpservers/openrouterai"
+			],
+			"env": {
+				"OPENROUTER_API_KEY": "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",
+				"OPENROUTER_DEFAULT_MODEL": "nvidia/llama-3.1-nemotron-ultra-253b-v1:free",
+				"OPENROUTER_MAX_TOKENS": "2048",
+				"OPENROUTER_PROVIDER_QUANTIZATIONS": "fp16,int8",
+				"OPENROUTER_PROVIDER_IGNORE": "openai,anthropic"
+			},
+			"type": "stdio"
+		}
+	}
+}
