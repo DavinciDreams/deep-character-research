@@ -5,12 +5,12 @@ from typing import Dict, List, Optional
 from dataclasses import dataclass
 from datetime import datetime
 
-from research_agent import DeepResearchAgent
-from data_sources import DataSourceManager
-from storage import VectorDatabase, DocumentStore
-from character_engine import CharacterEngine
-from ai_providers import AIProviderManager
-from config import ResearchConfig
+from backend.research_agent import DeepResearchAgent
+from backend.data_sources import DataSourceManager
+from backend.storage import VectorDatabase, DocumentStore
+from backend.character_engine import CharacterEngine
+from backend.ai_providers import AIProviderManager
+from backend.config import ResearchConfig
 
 @dataclass
 class CharacterProfile:
