@@ -290,6 +290,131 @@ This project is for educational and research purposes. Please respect the terms 
 - **OpenRouter**: Access to diverse AI models
 - **ChromaDB**: Vector database for semantic search
 
+## 🛡️ FastAPI Backend API
+
+The backend provides three main endpoints for character research and interaction.
+
+---
+
+### `POST /research_character`
+
+**Purpose:**
+Initiate deep research on a historical character, gathering information and generating a personality profile.
+
+**Request JSON:**
+```json
+{
+  "character_name": "string",         // Name of the character to research (required)
+  "research_depth": "string",         // Research depth: "basic", "comprehensive", or "exhaustive" (optional, default: "comprehensive")
+  "ai_provider": "string"             // AI provider to use (optional)
+}
+```
+
+**Example Request:**
+```http
+POST /research_character
+Content-Type: application/json
+
+{
+  "character_name": "Leonardo da Vinci",
+  "research_depth": "comprehensive",
+  "ai_provider": "openrouter"
+}
+```
+
+**Example Response:**
+```json
+{
+  "character_name": "Leonardo da Vinci",
+  "personality_traits": ["Curious", "Inventive", "Analytical"],
+  "knowledge_domains": ["Art", "Science", "Engineering"],
+  "sources": [
+    {"title": "Wikipedia", "url": "..."},
+    {"title": "ArXiv", "url": "..."}
+  ],
+  "summary": "Leonardo da Vinci was a Renaissance polymath..."
+}
+```
+
+---
+
+### `POST /chat_with_character`
+
+**Purpose:**
+Send a message to a researched character and receive an AI-generated response in their persona.
+
+**Request JSON:**
+```json
+{
+  "character_name": "string",         // Name of the character to chat with (required)
+  "message": "string",                // User's message to the character (required)
+  "ai_provider": "string",            // AI provider to use (optional)
+  "model": "string"                   // Specific model to use (optional)
+}
+```
+
+**Example Request:**
+```http
+POST /chat_with_character
+Content-Type: application/json
+
+{
+  "character_name": "Leonardo da Vinci",
+  "message": "What inspired your inventions?",
+  "ai_provider": "openrouter"
+}
+```
+
+**Example Response:**
+```json
+{
+  "response": "Curiosity has always been my guiding force. The wonders of nature inspired many of my inventions..."
+}
+```
+
+---
+
+### `POST /compare_ai_responses`
+
+**Purpose:**
+Send a message to a character and compare responses from all available AI providers.
+
+**Request JSON:**
+```json
+{
+  "character_name": "string",         // Name of the character (required)
+  "message": "string"                 // User's message to the character (required)
+}
+```
+
+**Example Request:**
+```http
+POST /compare_ai_responses
+Content-Type: application/json
+
+{
+  "character_name": "Leonardo da Vinci",
+  "message": "Describe your artistic process."
+}
+```
+
+**Example Response:**
+```json
+{
+  "openai": {
+    "response": "My artistic process begins with careful observation of nature..."
+  },
+  "openrouter": {
+    "response": "For me, art and science are intertwined. I study anatomy to improve my paintings..."
+  }
+}
+```
+
+---
+
+**Note:**
+All endpoints return HTTP 500 with a JSON error message if an internal error occurs.
+
 ## 📞 Support
 
 If you encounter issues:
