@@ -1,0 +1,68 @@
+<best_practices>
+  <general_principles>
+    <principle priority="high">
+      <name>Mobile-First Design</name>
+      <description>Always start with mobile layouts and progressively enhance for larger screens.</description>
+      <rationale>Ensures optimal experience for the majority of users and devices.</rationale>
+      <example>
+        <scenario>Designing a new page or component</scenario>
+        <good>Write CSS for small screens first, then add media queries for larger screens.</good>
+        <bad>Design for desktop first and try to shrink down for mobile.</bad>
+      </example>
+    </principle>
+    <principle priority="high">
+      <name>Visual Hierarchy & Clarity</name>
+      <description>Use spacing, color, and typography to guide user attention and create clear structure.</description>
+      <rationale>Improves usability and aesthetics.</rationale>
+      <example>
+        <scenario>Arranging UI elements</scenario>
+        <good>Use consistent spacing and clear headings.</good>
+        <bad>Random or crowded placement of elements.</bad>
+      </example>
+    </principle>
+    <principle priority="high">
+      <name>Accessibility</name>
+      <description>Ensure all UI is usable by everyone, including users with disabilities.</description>
+      <rationale>Accessibility is essential for inclusivity and often a legal requirement.</rationale>
+      <example>
+        <scenario>Building interactive components</scenario>
+        <good>Use semantic HTML, ARIA labels, and ensure keyboard navigation.</good>
+        <bad>Rely only on mouse interactions or visual cues.</bad>
+      </example>
+    </principle>
+    <principle priority="medium">
+      <name>Performance Optimization</name>
+      <description>Optimize assets and code for fast load and smooth interaction.</description>
+      <rationale>Performance impacts user satisfaction and SEO.</rationale>
+      <example>
+        <scenario>Adding images or animations</scenario>
+        <good>Compress images, use SVGs, and minimize JS/CSS bundles.</good>
+        <bad>Use large, unoptimized images or heavy libraries unnecessarily.</bad>
+      </example>
+    </principle>
+    <principle priority="medium">
+      <name>Clean, Maintainable Code</name>
+      <description>Write modular, well-documented, and consistent code.</description>
+      <rationale>Improves collaboration and future updates.</rationale>
+      <example>
+        <scenario>Implementing a new component</scenario>
+        <good>Use clear naming, comments, and reusable styles/components.</good>
+        <bad>Write tangled, duplicated, or uncommented code.</bad>
+      </example>
+    </principle>
+  </general_principles>
+  <quality_checklist>
+    <category name="before_starting">
+      <item>Clarify design and UX requirements</item>
+      <item>Identify target devices and breakpoints</item>
+    </category>
+    <category name="during_implementation">
+      <item>Apply mobile-first and accessibility principles</item>
+      <item>Optimize assets and code structure</item>
+    </category>
+    <category name="before_completion">
+      <item>Test on multiple devices and browsers</item>
+      <item>Review for visual polish and usability</item>
+    </category>
+  </quality_checklist>
+</best_practices>

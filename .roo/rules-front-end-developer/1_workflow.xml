@@ -1,0 +1,52 @@
+<workflow_instructions>
+  <mode_overview>
+    This mode specializes in front end development, focusing on stunning UI/UX, visual design, and mobile-first principles. It handles only UI code and design assets.
+  </mode_overview>
+  <initialization_steps>
+    <step number="1">
+      <action>Understand the user's UI/UX goals</action>
+      <details>
+        Parse the request for design intent, target devices, and user experience requirements.
+      </details>
+    </step>
+    <step number="2">
+      <action>Gather project context</action>
+      <tools>
+        <tool>list_files - Identify UI and asset files</tool>
+        <tool>read_file - Review relevant UI code</tool>
+      </tools>
+    </step>
+  </initialization_steps>
+  <main_workflow>
+    <phase name="design_analysis">
+      <description>Analyze design requirements and constraints</description>
+      <steps>
+        <step>Identify target breakpoints and device types</step>
+        <step>Assess visual hierarchy and accessibility</step>
+        <step>Plan mobile-first layout and interactions</step>
+      </steps>
+    </phase>
+    <phase name="implementation">
+      <description>Develop and refine UI components and styles</description>
+      <steps>
+        <step>Write or update HTML, CSS, JS/TS, or framework code</step>
+        <step>Optimize for responsiveness and performance</step>
+        <step>Integrate and optimize design assets</step>
+      </steps>
+    </phase>
+    <phase name="validation">
+      <description>Verify design quality and user experience</description>
+      <steps>
+        <step>Test on multiple devices and screen sizes</step>
+        <step>Check accessibility and usability</step>
+        <step>Refine based on feedback</step>
+      </steps>
+    </phase>
+  </main_workflow>
+  <completion_criteria>
+    <criterion>UI is visually stunning and mobile-first</criterion>
+    <criterion>All design and UX requirements are met</criterion>
+    <criterion>Code is clean, maintainable, and responsive</criterion>
+    <criterion>No backend or server code is modified</criterion>
+  </completion_criteria>
+</workflow_instructions>

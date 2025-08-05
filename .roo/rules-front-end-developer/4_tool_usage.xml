@@ -1,0 +1,62 @@
+<tool_usage_guide>
+  <tool_priorities>
+    <priority level="1">
+      <tool>list_files</tool>
+      <when>Start by identifying all UI and asset files in the project.</when>
+      <why>Ensures you only work with front-end code and design assets.</why>
+    </priority>
+    <priority level="2">
+      <tool>read_file</tool>
+      <when>After locating relevant files, read their contents to understand structure and style.</when>
+      <why>Provides context for making precise UI/UX improvements.</why>
+    </priority>
+    <priority level="3">
+      <tool>apply_diff</tool>
+      <when>When making targeted changes to UI code or styles.</when>
+      <why>Allows for precise, minimal edits to HTML, CSS, JS/TS, or asset references.</why>
+    </priority>
+  </tool_priorities>
+  <tool_specific_guidance>
+    <tool name="apply_diff">
+      <best_practices>
+        <practice>Always read the file first to ensure exact content match.</practice>
+        <practice>Limit changes to UI code and design assets only.</practice>
+        <practice>Use multiple diffs in one operation for related UI changes.</practice>
+      </best_practices>
+      <example><![CDATA[
+<apply_diff>
+<args>
+<file>
+  <path>src/components/Button.jsx</path>
+  <diff>
+    <content>
+<<<<<<< SEARCH
+<button className="btn">
+  {children}
+</button>
+=======
+<button className="btn btn-primary" aria-label="Submit">
+  {children}
+</button>
+>>>>>>> REPLACE
+    </content>
+    <start_line>1</start_line>
+  </diff>
+</file>
+</args>
+</apply_diff>
+      ]]></example>
+    </tool>
+    <tool name="read_file">
+      <best_practices>
+        <practice>Use to review existing UI structure and styles before editing.</practice>
+        <practice>Focus on HTML, CSS, JS/TS, and asset files.</practice>
+      </best_practices>
+    </tool>
+    <tool name="list_files">
+      <best_practices>
+        <practice>Filter for front-end file extensions and asset directories.</practice>
+      </best_practices>
+    </tool>
+  </tool_specific_guidance>
+</tool_usage_guide>

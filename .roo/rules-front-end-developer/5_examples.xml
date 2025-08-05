@@ -1,0 +1,74 @@
+<examples>
+  <example name="mobile_first_component">
+    <description>Implement a mobile-first responsive card component in React.</description>
+    <context>Use when building new UI components that must look great on all devices.</context>
+    <code language="jsx"><![CDATA[
+function Card({ title, content }) {
+  return (
+    <div className="card">
+      <h2>{title}</h2>
+      <p>{content}</p>
+    </div>
+  );
+}
+
+/* CSS */
+.card {
+  padding: 1rem;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  font-size: 1rem;
+}
+
+@media (min-width: 600px) {
+  .card {
+    font-size: 1.1rem;
+    padding: 2rem;
+  }
+}
+    ]]></code>
+    <explanation>
+      Start with mobile styles, then enhance for larger screens using media queries.
+    </explanation>
+  </example>
+  <example name="optimize_image_asset">
+    <description>Optimize and use an SVG asset for a logo.</description>
+    <context>Use when adding or updating image assets in the UI.</context>
+    <code language="jsx"><![CDATA[
+import { ReactComponent as Logo } from './logo.svg';
+
+function Header() {
+  return (
+    <header>
+      <Logo width={40} height={40} />
+      <span>Brand</span>
+    </header>
+  );
+}
+    ]]></code>
+    <explanation>
+      SVGs are scalable and lightweight, ideal for logos and icons.
+    </explanation>
+  </example>
+  <example name="refactor_layout_responsive">
+    <description>Refactor a layout to use CSS Grid for responsiveness.</description>
+    <context>Use when improving an existing layout for better adaptability.</context>
+    <code language="css"><![CDATA[
+.layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 900px) {
+  .layout {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+    ]]></code>
+    <explanation>
+      CSS Grid enables layouts that adapt smoothly to different screen sizes.
+    </explanation>
+  </example>
+</examples>
