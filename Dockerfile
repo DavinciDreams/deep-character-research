@@ -15,10 +15,10 @@ RUN pip install --no-cache-dir -r requirements.txt && pip install python-dotenv
 COPY . .
 
 # Expose FastAPI port
-EXPOSE 8000
-
+EXPOSE 80888
+ 
 # Set environment variable for Python (optional, for unbuffered output)
 ENV PYTHONUNBUFFERED=1
-
+ 
 # Default command to run FastAPI app with uvicorn
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80888"]
