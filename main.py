@@ -1,3 +1,8 @@
+from dotenv import load_dotenv
+load_dotenv()
+import uvicorn
+from api import app
+
 import asyncio
 import logging
 from pathlib import Path
@@ -346,4 +351,4 @@ async def main():
         await researcher.cleanup()
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    uvicorn.run(app, host="0.0.0.0", port=8000)

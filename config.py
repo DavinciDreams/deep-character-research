@@ -1,11 +1,7 @@
 from dataclasses import dataclass
 from pathlib import Path
 import os
-from dotenv import load_dotenv
 from typing import Optional
-
-# Load environment variables
-load_dotenv()
 
 @dataclass
 class ResearchConfig:
@@ -19,22 +15,29 @@ class ResearchConfig:
         # Set up database paths
         self.vector_db_path = str(Path(self.base_data_dir) / "vector_db")
         self.doc_store_path = str(Path(self.base_data_dir) / "documents.db")
-    
-    # AI Provider settings
-    openai_api_key: Optional[str] = os.getenv("OPENAI_API_KEY")
-    openrouter_api_key: Optional[str] = os.getenv("OPENROUTER_API_KEY") 
-    anthropic_api_key: Optional[str] = os.getenv("ANTHROPIC_API_KEY")
-    
-    # LM Studio settings
-    lmstudio_base_url: str = os.getenv("LMSTUDIO_BASE_URL", "http://localhost:1234")
-    lmstudio_model: str = os.getenv("LMSTUDIO_MODEL", "local-model")
-    
-    # Default provider and model
-    default_provider: str = os.getenv("DEFAULT_AI_PROVIDER", "openrouter")
-    default_model: str = os.getenv("DEFAULT_MODEL", "nvidia/llama-3.1-nemotron-ultra-253b-v1:free")
-    
-    # Fallback settings
-    fallback_enabled: bool = os.getenv("FALLBACK_ENABLED", "true").lower() == "true"
+
+        # AI Provider settings (runtime env loading)
+        self.openai_api_key: Optional[str] = os.getenv("OPENAI_API_KEY")
+        self.openrouter_api_key: Optional[str] = os.getenv("OPENROUTER_API_KEY")
+        self.anthropic_api_key: Optional[str] = os.getenv("ANTHROPIC_API_KEY")
+
+        # LM Studio settings
+        self.lmstudio_base_url: str = os.getenv("LMSTUDIO_BASE_URL", "http://localhost:1234")
+        self.lmstudio_model: str = os.getenv("LMSTUDIO_MODEL", "local-model")
+
+        # Default provider and model
+        self.default_provider: str = os.getenv("DEFAULT_AI_PROVIDER", "openrouter")
+        self.default_model: str = os.getenv("DEFAULT_MODEL", "nvidia/llama-3.1-nemotron-ultra-253b-v1:free")
+
+        # Fallback settings
+        self.fallback_enabled: bool = os.getenv("FALLBACK_ENABLED", "true").lower() == "true"
+
+        # Fail early if OpenRouter API key is missing
+        if not self.openrouter_api_key:
+            raise RuntimeError(
+                "OPENROUTER_API_KEY environment variable is missing. "
+                "Please set it in your environment or .env file."
+            )
     
     # Research settings
     max_sources_per_domain: int = 50

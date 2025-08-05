@@ -6,12 +6,8 @@ from dataclasses import dataclass
 import json
 import os
 from pathlib import Path
-from dotenv import load_dotenv
 
-# Load environment variables
-load_dotenv()
-
-@dataclass 
+@dataclass
 class AIConfig:
     openai_api_key: Optional[str] = None
     openrouter_api_key: Optional[str] = None
