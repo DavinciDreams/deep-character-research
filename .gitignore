@@ -5,4 +5,5 @@ __pycache__/
 *.sqlite3
 logs/
 data/document_store/
-data/vector_db/
+data/vector_db/node_modules/
+.env
