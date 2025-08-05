@@ -1,3 +1,5 @@
 _pycache__/
 .env
 .next
+_pycache__
+pycache__
