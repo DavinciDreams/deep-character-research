@@ -42,7 +42,7 @@ class ResearchConfig:
     
     def get_ai_config(self):
         """Get AI configuration object"""
-        from ai_providers import AIConfig
+        from backend.ai_providers import AIConfig
         
         return AIConfig(
             openai_api_key=self.openai_api_key,

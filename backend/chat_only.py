@@ -1,7 +1,7 @@
 import asyncio
 import sys
-from main import DeepCharacterResearcher
-from config import ResearchConfig
+from backend.main import DeepCharacterResearcher
+from backend.config import ResearchConfig
 
 async def quick_chat(character_name: str):
     """Quick chat with a character (assumes already researched)"""
