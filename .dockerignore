@@ -1,0 +1,9 @@
+.git
+__pycache__/
+*.pyc
+.env
+character-researcher-frontend/
+.roo/
+.roomodes/
+data/
+.DS_Store
