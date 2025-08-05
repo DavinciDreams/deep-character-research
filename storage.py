@@ -86,9 +86,90 @@ class DocumentStore:
                 )
             ''')
             
+            conn.execute('''
+                CREATE TABLE IF NOT EXISTS chat_history (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    character_id INTEGER,
+                    user_message TEXT NOT NULL,
+                    character_response TEXT NOT NULL,
+                    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (character_id) REFERENCES characters (id)
+                )
+            ''')
+            conn.execute('''
+                CREATE TABLE IF NOT EXISTS user_searches (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    user_query TEXT NOT NULL,
+                    character_id INTEGER,
+                    search_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    results_count INTEGER,
+                    FOREIGN KEY (character_id) REFERENCES characters (id)
+                )
+            ''')
             conn.commit()
     
     def add_character(self, name: str) -> int:
+        """Add a character and return their ID"""
+        with sqlite3.connect(self.db_path) as conn:
+            try:
+                cursor = conn.execute(
+                    'INSERT INTO characters (name) VALUES (?)',
+                    (name,)
+                )
+                return cursor.lastrowid
+            except sqlite3.IntegrityError:
+                # Character already exists
+                cursor = conn.execute(
+                    'SELECT id FROM characters WHERE name = ?',
+                    (name,)
+                )
+                return cursor.fetchone()[0]
+
+    def add_chat_history(self, character_id: int, user_message: str, character_response: str) -> int:
+        """Add a chat history record"""
+        with sqlite3.connect(self.db_path) as conn:
+            cursor = conn.execute(
+                '''INSERT INTO chat_history (character_id, user_message, character_response)
+                   VALUES (?, ?, ?)''',
+                (character_id, user_message, character_response)
+            )
+            return cursor.lastrowid
+
+    def get_chat_history(self, character_id: int, limit: int = 50) -> List[Dict[str, Any]]:
+        """Get recent chat history for a character"""
+        with sqlite3.connect(self.db_path) as conn:
+            conn.row_factory = sqlite3.Row
+            cursor = conn.execute(
+                '''SELECT * FROM chat_history
+                   WHERE character_id = ?
+                   ORDER BY timestamp DESC
+                   LIMIT ?''',
+                (character_id, limit)
+            )
+            return [dict(row) for row in cursor.fetchall()]
+
+    def add_user_search(self, user_query: str, character_id: int, results_count: int) -> int:
+        """Add a user search record"""
+        with sqlite3.connect(self.db_path) as conn:
+            cursor = conn.execute(
+                '''INSERT INTO user_searches (user_query, character_id, results_count)
+                   VALUES (?, ?, ?)''',
+                (user_query, character_id, results_count)
+            )
+            return cursor.lastrowid
+
+    def get_user_searches(self, character_id: int, limit: int = 50) -> List[Dict[str, Any]]:
+        """Get recent user searches for a character"""
+        with sqlite3.connect(self.db_path) as conn:
+            conn.row_factory = sqlite3.Row
+            cursor = conn.execute(
+                '''SELECT * FROM user_searches
+                   WHERE character_id = ?
+                   ORDER BY search_time DESC
+                   LIMIT ?''',
+                (character_id, limit)
+            )
+            return [dict(row) for row in cursor.fetchall()]
         """Add a character and return their ID"""
         with sqlite3.connect(self.db_path) as conn:
             try:

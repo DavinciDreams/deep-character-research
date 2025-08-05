@@ -14,8 +14,8 @@ export interface HistoricalFigure {
   shortDescription: string;
   /** URL to the figure's portrait image */
   portraitUrl: string;
-  /** Optional array of contemporaries' names or objects */
-  contemporaries?: string[] | HistoricalFigure[];
+  /** Array of contemporaries' names */
+  contemporaries: string[];
 }
 
 /**
@@ -91,6 +91,56 @@ export interface ChatMessageResponse {
 }
 
 /**
- * Array of historical figures returned from the API.
+ * Filters for searching historical figures.
  */
-export type GetCharactersResponse = HistoricalFigure[];
+export interface CharacterSearchFilters {
+  era?: string;
+  type?: string;
+  profession?: string;
+  name?: string;
+  keywords?: string;
+  field?: string;
+}
+
+/**
+ * Response from the /api/characters endpoint.
+ */
+export interface GetCharactersResponse {
+  characters: HistoricalFigure[];
+}
+
+/**
+ * Represents a document associated with a historical figure.
+ */
+export interface Document {
+  id: number;
+  character_id: number;
+  title: string;
+  content: string;
+  url: string;
+  source_type: string;
+  quality_score: number;
+  metadata: Record<string, any>;
+}
+
+/**
+ * Represents a chat history entry.
+ */
+export interface ChatHistory {
+  id: number;
+  character_id: number;
+  user_message: string;
+  character_response: string;
+  timestamp: string;
+}
+
+/**
+ * Represents a user search entry.
+ */
+export interface UserSearch {
+  id: number;
+  user_query: string;
+  character_id: number;
+  search_time: string;
+  results_count: number;
+}

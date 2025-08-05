@@ -1,21 +1,26 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { HistoricalFigure } from '../types/types';
+import { HistoricalFigure, CharacterSearchFilters } from '../types/types';
 import FigureCard from './FigureCard';
 // import '../src/styles/historicalFigureGallery.css'; // Moved to _app.tsx for Next.js global CSS compliance
-import { getCharacters } from '../services/api';
+import { getCharacters, createCharacter, deleteCharacter, updateCharacter } from '../services/api';
 
-interface HistoricalFigureGalleryProps {
+export interface HistoricalFigureGalleryProps {
   onSelectFigure: (figure: HistoricalFigure) => void;
-  searchQuery: string;
+  searchFields?: CharacterSearchFilters & { description?: string };
   showFilters?: boolean;
 }
 
 const HistoricalFigureGallery: React.FC<HistoricalFigureGalleryProps> = React.memo(({
   onSelectFigure,
-  searchQuery,
+  searchFields,
   showFilters = true
 }) => {
+  const effectiveSearchFields = searchFields || {};
   const [figures, setFigures] = useState<HistoricalFigure[]>([]);
+  const [adding, setAdding] = useState(false);
+  const [newName, setNewName] = useState('');
+  const [editingFigure, setEditingFigure] = useState<HistoricalFigure | null>(null);
+  const [editName, setEditName] = useState('');
   const [selectedEra, setSelectedEra] = useState<string | null>(null);
   const [selectedType, setSelectedType] = useState<string | null>(null);
   const [selectedProfession, setSelectedProfession] = useState<string | null>(null);
@@ -33,10 +38,10 @@ const HistoricalFigureGallery: React.FC<HistoricalFigureGalleryProps> = React.me
 
   useEffect(() => {
     setLoading(true);
-    // Debounce API calls for filters
+    // Debounce API calls for filters and search
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
-      const cacheKey = `${selectedEra || 'all'}|${selectedType || 'all'}|${selectedProfession || 'all'}`;
+      const cacheKey = `${selectedEra || 'all'}|${selectedType || 'all'}|${selectedProfession || 'all'}|${effectiveSearchFields.name || ''}|${effectiveSearchFields.field || ''}|${effectiveSearchFields.era || ''}|${effectiveSearchFields.description || ''}`;
       if (cacheRef.current[cacheKey]) {
         setFigures(cacheRef.current[cacheKey]);
         setEras(Array.from(new Set(cacheRef.current[cacheKey].map((f: HistoricalFigure) => f.era))));
@@ -47,14 +52,17 @@ const HistoricalFigureGallery: React.FC<HistoricalFigureGalleryProps> = React.me
       const fetchFigures = async () => {
         try {
           const data = await getCharacters({
-            era: selectedEra || undefined,
+            era: effectiveSearchFields.era || selectedEra || undefined,
             type: selectedType && selectedType !== 'All Types' ? selectedType : undefined,
-            profession: selectedProfession && selectedProfession !== 'All Professions' ? selectedProfession : undefined
+            profession: selectedProfession && selectedProfession !== 'All Professions' ? selectedProfession : undefined,
+            name: effectiveSearchFields.name || undefined,
+            field: effectiveSearchFields.field || undefined,
+            keywords: effectiveSearchFields.description || undefined
           });
-          setFigures(data);
-          cacheRef.current[cacheKey] = data;
-          setEras(Array.from(new Set(data.map((f: HistoricalFigure) => f.era))));
-          setProfessions(Array.from(new Set(data.map((f: any) => f.profession).filter(Boolean))));
+          setFigures(data.characters);
+          cacheRef.current[cacheKey] = data.characters;
+          setEras(Array.from(new Set(data.characters.map((f: HistoricalFigure) => f.era))));
+          setProfessions(Array.from(new Set(data.characters.map((f: any) => f.profession).filter(Boolean))));
         } catch (err) {
           setFigures([]);
           setProfessions([]);
@@ -67,18 +75,94 @@ const HistoricalFigureGallery: React.FC<HistoricalFigureGalleryProps> = React.me
     return () => {
       if (debounceRef.current) clearTimeout(debounceRef.current);
     };
-  }, [selectedEra, selectedType, selectedProfession]);
+  }, [selectedEra, selectedType, selectedProfession, effectiveSearchFields.name, effectiveSearchFields.field, effectiveSearchFields.era, effectiveSearchFields.description]);
 
-  const filteredFigures = React.useMemo(() => figures.filter(figure => {
-    const matchesSearch =
-      figure.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      figure.era.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      figure.shortDescription.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesSearch;
-  }), [figures, searchQuery]);
+  // No longer filter by searchQuery; backend handles filtering
+  const filteredFigures = figures;
 
   return (
     <div className="w-full flex flex-col gap-8">
+      <div className="flex justify-end mb-2">
+        <button
+          className="unified-btn bg-green-600 text-white px-3 py-1 rounded"
+          onClick={() => setAdding(true)}
+          type="button"
+        >
+          Add Figure
+        </button>
+      </div>
+      {adding && (
+        <div className="flex items-center gap-2 mb-4">
+          <input
+            type="text"
+            value={newName}
+            onChange={e => setNewName(e.target.value)}
+            placeholder="New figure name"
+            className="rounded px-2 py-1 border border-yellow-700"
+          />
+          <button
+            className="unified-btn bg-green-700 text-white px-2 py-1 rounded"
+            onClick={async () => {
+              if (!newName.trim()) return;
+              setAdding(false);
+              setNewName('');
+              try {
+                const created = await createCharacter(newName.trim());
+                setFigures(prev => [...prev, created]);
+              } catch (err) {
+                // handle error
+              }
+            }}
+            type="button"
+          >
+            Save
+          </button>
+          <button
+            className="unified-btn bg-gray-500 text-white px-2 py-1 rounded"
+            onClick={() => { setAdding(false); setNewName(''); }}
+            type="button"
+          >
+            Cancel
+          </button>
+        </div>
+      )}
+      {editingFigure && (
+        <div className="flex items-center gap-2 mb-4">
+          <input
+            type="text"
+            value={editName}
+            onChange={e => setEditName(e.target.value)}
+            placeholder="Edit figure name"
+            className="rounded px-2 py-1 border border-yellow-700"
+          />
+          <button
+            className="unified-btn bg-blue-700 text-white px-2 py-1 rounded"
+            onClick={async () => {
+              if (!editName.trim()) return;
+              try {
+                const updated = await updateCharacter(editingFigure.id, editName.trim());
+                setFigures(prev =>
+                  prev.map(f => (f.id === updated.id ? updated : f))
+                );
+                setEditingFigure(null);
+                setEditName('');
+              } catch (err) {
+                // handle error
+              }
+            }}
+            type="button"
+          >
+            Save
+          </button>
+          <button
+            className="unified-btn bg-gray-500 text-white px-2 py-1 rounded"
+            onClick={() => { setEditingFigure(null); setEditName(''); }}
+            type="button"
+          >
+            Cancel
+          </button>
+        </div>
+      )}
       {showFilters && (
         <div className="flex flex-wrap justify-center gap-2 mb-4">
           <button

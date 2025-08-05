@@ -8,9 +8,11 @@ import { Clock } from 'lucide-react';
 interface FigureCardProps {
   figure: HistoricalFigure;
   onSelect: () => void;
+  onDelete?: (id: number) => void;
+  onEdit?: (figure: HistoricalFigure) => void;
 }
 
-const FigureCard: React.FC<FigureCardProps> = React.memo(({ figure, onSelect }) => {
+const FigureCard: React.FC<FigureCardProps> = React.memo(({ figure, onSelect, onDelete, onEdit }) => {
   return (
     <div
       className="bg-[rgba(26,26,46,0.5)] border border-yellow-700 rounded-lg overflow-hidden transition-all duration-300 cursor-pointer relative shadow-lg hover:-translate-y-1 hover:shadow-xl hover:border-blue-400"
@@ -69,6 +71,28 @@ const FigureCard: React.FC<FigureCardProps> = React.memo(({ figure, onSelect }) 
       >
         Connect
       </button>
+      <div className="flex gap-2 px-5 pb-3">
+        {onEdit && (
+          <button
+            className="unified-btn bg-blue-600 text-white text-xs px-2 py-1 rounded"
+            onClick={e => { e.stopPropagation(); onEdit(figure); }}
+            aria-label={`Edit ${figure.name}`}
+            type="button"
+          >
+            Edit
+          </button>
+        )}
+        {onDelete && (
+          <button
+            className="unified-btn bg-red-600 text-white text-xs px-2 py-1 rounded"
+            onClick={e => { e.stopPropagation(); onDelete(figure.id); }}
+            aria-label={`Delete ${figure.name}`}
+            type="button"
+          >
+            Delete
+          </button>
+        )}
+      </div>
     </div>
   );
 });

@@ -4,6 +4,10 @@ import {
   ResearchResultResponse,
   ChatMessageResponse,
   GetCharactersResponse,
+  CharacterSearchFilters,
+  Document,
+  ChatHistory,
+  UserSearch,
 } from '../types/types';
 
 /**
@@ -91,16 +95,135 @@ export async function sendChatMessage(
  * @returns Array of HistoricalFigure objects
  */
 export const getCharacters = async (
-  filters?: { era?: string; type?: string; profession?: string }
+  filters?: CharacterSearchFilters
 ): Promise<GetCharactersResponse> => {
   const params = new URLSearchParams();
   const safeFilters = filters || {};
   if (safeFilters.era) params.append('era', safeFilters.era);
   if (safeFilters.type) params.append('type', safeFilters.type);
   if (safeFilters.profession) params.append('profession', safeFilters.profession);
+  if (safeFilters.name) params.append('name', safeFilters.name);
+  if (safeFilters.keywords) params.append('keywords', safeFilters.keywords);
+  if (safeFilters.field) params.append('field', safeFilters.field);
   const res = await fetch(`${API_URL}/api/characters?${params.toString()}`);
   if (!res.ok) {
     throw new Error(`Failed to fetch characters: ${res.statusText}`);
   }
   return res.json() as Promise<GetCharactersResponse>;
 };
+
+/**
+ * --- CRUD for Historical Figures ---
+ */
+export async function createCharacter(name: string): Promise<HistoricalFigure> {
+  const res = await fetch(`${API_URL}/api/characters`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name }),
+  });
+  if (!res.ok) throw new Error(`Failed to create character: ${res.statusText}`);
+  return res.json() as Promise<HistoricalFigure>;
+}
+
+export async function getCharacter(id: number): Promise<HistoricalFigure> {
+  const res = await fetch(`${API_URL}/api/characters/${id}`);
+  if (!res.ok) throw new Error(`Failed to fetch character: ${res.statusText}`);
+  return res.json() as Promise<HistoricalFigure>;
+}
+
+export async function updateCharacter(id: number, name: string): Promise<HistoricalFigure> {
+  const res = await fetch(`${API_URL}/api/characters/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name }),
+  });
+  if (!res.ok) throw new Error(`Failed to update character: ${res.statusText}`);
+  return res.json() as Promise<HistoricalFigure>;
+}
+
+export async function deleteCharacter(id: number): Promise<void> {
+  const res = await fetch(`${API_URL}/api/characters/${id}`, { method: 'DELETE' });
+  if (!res.ok) throw new Error(`Failed to delete character: ${res.statusText}`);
+}
+
+/**
+ * --- CRUD for Documents ---
+ */
+export async function createDocument(doc: Omit<Document, 'id'>): Promise<Document> {
+  const res = await fetch(`${API_URL}/api/documents`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(doc),
+  });
+  if (!res.ok) throw new Error(`Failed to create document: ${res.statusText}`);
+  return res.json() as Promise<Document>;
+}
+
+export async function getDocument(id: number): Promise<Document> {
+  const res = await fetch(`${API_URL}/api/documents/${id}`);
+  if (!res.ok) throw new Error(`Failed to fetch document: ${res.statusText}`);
+  return res.json() as Promise<Document>;
+}
+
+export async function updateDocument(id: number, doc: Partial<Document>): Promise<Document> {
+  const res = await fetch(`${API_URL}/api/documents/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(doc),
+  });
+  if (!res.ok) throw new Error(`Failed to update document: ${res.statusText}`);
+  return res.json() as Promise<Document>;
+}
+
+export async function deleteDocument(id: number): Promise<void> {
+  const res = await fetch(`${API_URL}/api/documents/${id}`, { method: 'DELETE' });
+  if (!res.ok) throw new Error(`Failed to delete document: ${res.statusText}`);
+}
+
+/**
+ * --- CRUD for Chat History ---
+ */
+export async function createChatHistory(entry: Omit<ChatHistory, 'id' | 'timestamp'>): Promise<ChatHistory> {
+  const res = await fetch(`${API_URL}/api/chat_history`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(entry),
+  });
+  if (!res.ok) throw new Error(`Failed to create chat history: ${res.statusText}`);
+  return res.json() as Promise<ChatHistory>;
+}
+
+export async function getChatHistory(id: number): Promise<ChatHistory> {
+  const res = await fetch(`${API_URL}/api/chat_history/${id}`);
+  if (!res.ok) throw new Error(`Failed to fetch chat history: ${res.statusText}`);
+  return res.json() as Promise<ChatHistory>;
+}
+
+export async function deleteChatHistory(id: number): Promise<void> {
+  const res = await fetch(`${API_URL}/api/chat_history/${id}`, { method: 'DELETE' });
+  if (!res.ok) throw new Error(`Failed to delete chat history: ${res.statusText}`);
+}
+
+/**
+ * --- CRUD for User Searches ---
+ */
+export async function createUserSearch(entry: Omit<UserSearch, 'id' | 'search_time'>): Promise<UserSearch> {
+  const res = await fetch(`${API_URL}/api/user_searches`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(entry),
+  });
+  if (!res.ok) throw new Error(`Failed to create user search: ${res.statusText}`);
+  return res.json() as Promise<UserSearch>;
+}
+
+export async function getUserSearch(id: number): Promise<UserSearch> {
+  const res = await fetch(`${API_URL}/api/user_searches/${id}`);
+  if (!res.ok) throw new Error(`Failed to fetch user search: ${res.statusText}`);
+  return res.json() as Promise<UserSearch>;
+}
+
+export async function deleteUserSearch(id: number): Promise<void> {
+  const res = await fetch(`${API_URL}/api/user_searches/${id}`, { method: 'DELETE' });
+  if (!res.ok) throw new Error(`Failed to delete user search: ${res.statusText}`);
+}

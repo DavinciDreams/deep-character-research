@@ -83,6 +83,136 @@ deep character research/
 └── README.md              # This file
 ```
 
+---
+
+## 🗃️ Backend Data Models
+
+### Historical Figures (`characters`)
+- **Fields:** `id` (int), `name` (str), `created_at` (timestamp)
+- **Purpose:** Represents a researched historical figure.
+- **Relationships:** One-to-many with Documents, Chat History, and User Searches.
+
+### Documents (`documents`)
+- **Fields:** `id` (int), `character_id` (int, FK), `title` (str), `content` (str), `url` (str), `source_type` (str), `quality_score` (float), `metadata` (JSON), `created_at` (timestamp)
+- **Purpose:** Stores research documents and sources related to a historical figure.
+- **Relationships:** Many-to-one with Historical Figures.
+
+### Chat History (`chat_history`)
+- **Fields:** `id` (int), `character_id` (int, FK), `user_message` (str), `character_response` (str), `timestamp` (timestamp)
+- **Purpose:** Records user-character chat interactions.
+- **Relationships:** Many-to-one with Historical Figures.
+
+### User Searches (`user_searches`)
+- **Fields:** `id` (int), `user_query` (str), `character_id` (int, FK), `search_time` (timestamp), `results_count` (int)
+- **Purpose:** Logs user search queries and results.
+- **Relationships:** Many-to-one with Historical Figures.
+
+---
+
+## 🛠️ API Endpoints
+
+### Research Task
+- **POST `/api/research`**
+  - **Request:** `{ "character": string, "query": string }`
+  - **Response:** `{ "task_id": string, "status": string }`
+  - **Purpose:** Initiates background research on a historical figure.
+
+- **GET `/api/research/{task_id}/status`**
+  - **Response:** `{ "task_id": string, "status": string }`
+  - **Purpose:** Get status of a research task.
+
+- **GET `/api/research/{task_id}/result`**
+  - **Response:** `{ "task_id": string, "result": object }`
+  - **Purpose:** Retrieve research results.
+
+### Historical Figures (Characters)
+- **GET `/api/characters`**
+  - **Query Params:** `name`, `field`, `era`, `keywords`
+  - **Response:** `{ "characters": [ ... ] }`
+  - **Purpose:** Search and list historical figures.
+
+- **POST `/api/characters`**
+  - **Request:** `{ "name": string }`
+  - **Response:** `{ "id": int, "name": string }`
+  - **Purpose:** Create a new historical figure.
+
+- **GET `/api/characters/{character_id}`**
+  - **Response:** `{ "id": int, "name": string }`
+  - **Purpose:** Get a specific historical figure.
+
+- **PUT `/api/characters/{character_id}`**
+  - **Request:** `{ "name": string }`
+  - **Response:** `{ "id": int, "name": string }`
+  - **Purpose:** Update a historical figure's name.
+
+- **DELETE `/api/characters/{character_id}`**
+  - **Response:** `{ "detail": "Character deleted" }`
+  - **Purpose:** Delete a historical figure.
+
+### Documents
+- **POST `/api/documents`**
+  - **Request:** `{ "character_id": int, "title": string, "content": string, ... }`
+  - **Response:** Document object
+  - **Purpose:** Add a document to a historical figure.
+
+- **GET `/api/documents/{document_id}`**
+  - **Response:** Document object
+  - **Purpose:** Retrieve a document.
+
+- **PUT `/api/documents/{document_id}`**
+  - **Request:** Partial/full document fields
+  - **Response:** Document object
+  - **Purpose:** Update a document.
+
+- **DELETE `/api/documents/{document_id}`**
+  - **Response:** `{ "detail": "Document deleted" }`
+  - **Purpose:** Delete a document.
+
+### Chat History
+- **POST `/api/chat_history`**
+  - **Request:** `{ "character_id": int, "user_message": string, "character_response": string }`
+  - **Response:** Chat history object
+  - **Purpose:** Record a chat interaction.
+
+- **GET `/api/chat_history/{chat_id}`**
+  - **Response:** Chat history object
+  - **Purpose:** Retrieve a chat interaction.
+
+- **DELETE `/api/chat_history/{chat_id}`**
+  - **Response:** `{ "detail": "Chat history deleted" }`
+  - **Purpose:** Delete a chat record.
+
+### User Searches
+- **POST `/api/user_searches`**
+  - **Request:** `{ "user_query": string, "character_id": int, "results_count": int }`
+  - **Response:** User search object
+  - **Purpose:** Log a user search.
+
+- **GET `/api/user_searches/{search_id}`**
+  - **Response:** User search object
+  - **Purpose:** Retrieve a user search.
+
+- **DELETE `/api/user_searches/{search_id}`**
+  - **Response:** `{ "detail": "User search deleted" }`
+  - **Purpose:** Delete a user search record.
+
+### AI Chat
+- **POST `/api/chat`**
+  - **Request:** `{ "character": string, "message": string }`
+  - **Response:** `{ "response": string }`
+  - **Purpose:** Chat with a researched historical figure using AI.
+
+---
+
+## 🔗 Frontend–Backend Integration
+
+- The frontend communicates with the backend via the above REST API endpoints.
+- Character search, document retrieval, chat, and research initiation are all performed through HTTP requests to these endpoints.
+- API responses are used to populate galleries, chat interfaces, and research results in the frontend UI.
+- All endpoints support CORS for local development (`http://localhost:3000`).
+
+---
+
 ## 🎮 Usage Examples
 
 ### Research a Character
