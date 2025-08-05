@@ -1,0 +1,8 @@
+.env
+__pycache__/
+*.pyc
+.DS_Store
+*.sqlite3
+logs/
+data/document_store/
+data/vector_db/
