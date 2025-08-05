@@ -1,9 +1,72 @@
-.git
+# 1. Version control
+.git/
+.gitignore
+.hg/
+.svn/
+
+# 2. Python artifacts
 __pycache__/
 *.pyc
+*.pyo
+.pytest_cache/
+.coverage
+
+# 3. Node.js artifacts
+node_modules/
+npm-debug.log
+yarn-debug.log
+
+# 4. Build outputs and development artifacts
+dist/
+build/
+out/
+debug/
+*.log
+
+# 5. IDE/editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# 6. Test and temporary files
+test/
+tests/
+*.tmp
+tmp/
+temp/
+
+# 7. Environment and secrets
 .env
-character-researcher-frontend/
-.roo/
-.roomodes/
-data/
-.DS_Store
+.env.*
+*.env
+*.pem
+*.key
+*.crt
+config.local.*
+*.local.yml
+.local/
+
+# 8. Documentation and examples
+docs/
+*.md
+README*
+
+# 9. Docker and compose files
+Dockerfile*
+docker-compose*
+
+# 10. Project-specific backups and artifacts
+*.bak
+
+# 11. Miscellaneous
+*.example
+
+# 12. Empty directories (if not needed)
+logs/
+characters/
+data/document_store/
+data/vector_db/
+
+# Exclude lock files from ignore (they are needed for reproducible builds)
+# (Do NOT add *.lock here)
