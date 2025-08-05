@@ -7,7 +7,7 @@ from pydantic import BaseModel
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from main import DeepCharacterResearcher
+from deep_character_researcher import DeepCharacterResearcher
 from config import ResearchConfig
 from typing import Dict, Any
 
