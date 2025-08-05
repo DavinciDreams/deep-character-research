@@ -13,11 +13,14 @@ from typing import Dict, Any, Optional, List
 from storage import DocumentStore
 
 app = FastAPI()
+@app.get("/")
+async def root():
+    return {"message": "Character Researcher API root. See /api/research, /api/chat, /api/characters."}
 
 # Allow CORS for local frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
