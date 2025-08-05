@@ -1,0 +1,12 @@
+aiohttp
+requests
+beautifulsoup4
+lxml
+scholarly
+openai
+anthropic
+numpy
+pandas
+python-dotenv
+chromadb
+sentence-transformers

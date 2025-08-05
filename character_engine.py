@@ -1,6 +1,6 @@
 from typing import List, Dict, Any, Optional
-from backend.storage import VectorDatabase, DocumentStore
-from backend.ai_providers import AIProviderManager
+from storage import VectorDatabase, DocumentStore
+from ai_providers import AIProviderManager
 import json
 import asyncio
 from dataclasses import dataclass

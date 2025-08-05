@@ -1,8 +1,8 @@
 import asyncio
 import sys
 import signal
-from backend.main import DeepCharacterResearcher
-from backend.config import ResearchConfig
+from main import DeepCharacterResearcher
+from config import ResearchConfig
 
 def signal_handler(signum, frame):
     """Handle Ctrl+C gracefully"""

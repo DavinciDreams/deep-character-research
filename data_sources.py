@@ -2,7 +2,7 @@ import asyncio
 import aiohttp
 from typing import Dict, List, Any
 import logging
-from backend.config import ResearchConfig
+from config import ResearchConfig
 
 class DataSourceManager:
     def __init__(self, config: ResearchConfig):

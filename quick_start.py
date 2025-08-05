@@ -1,6 +1,6 @@
 import asyncio
-from backend.main import DeepCharacterResearcher
-from backend.config import ResearchConfig
+from main import DeepCharacterResearcher
+from config import ResearchConfig
 
 async def quick_research():
     config = ResearchConfig()
