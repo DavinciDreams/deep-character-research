@@ -41,3 +41,16 @@ export async function sendChatMessage(character: string, message: string) {
   }
   return res.json();
 }
+
+// Fetch characters with optional filters for era and type
+export const getCharacters = async (filters?: { era?: string; type?: string }) => {
+  const params = new URLSearchParams();
+  const safeFilters = filters || {};
+  if (safeFilters.era) params.append('era', safeFilters.era);
+  if (safeFilters.type) params.append('type', safeFilters.type);
+  const res = await fetch(`${API_URL}/api/characters?${params.toString()}`);
+  if (!res.ok) {
+    throw new Error(`Failed to fetch characters: ${res.statusText}`);
+  }
+  return res.json();
+};
