@@ -1,0 +1,51 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Enhanced search bar styling for homepage */
+.search-bar-enhanced input[type="text"] {
+  width: 100%;
+  max-width: 540px;
+  height: 3.5rem;
+  font-size: 1.5rem;
+  padding: 1rem 1.5rem;
+  border-radius: 0.75rem;
+  border: none;
+  background: #fff;
+  color: #181a1b;
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.10);
+  margin-bottom: 1rem;
+  outline: none;
+  transition: box-shadow 0.2s;
+}
+
+.search-bar-enhanced input[type="text"]:focus {
+  box-shadow: 0 4px 24px rgba(255, 221, 51, 0.25);
+  border: 2px solid #facc15;
+}
+
+.search-bar-enhanced button[type="submit"] {
+  height: 3.5rem;
+  font-size: 1.25rem;
+  padding: 0 2rem;
+  border-radius: 0.75rem;
+  background: #facc15;
+  color: #181a1b;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  transition: background 0.2s, color 0.2s;
+}
+
+.search-bar-enhanced button[type="submit"]:hover:enabled {
+  background: #fde047;
+  color: #181a1b;
+}
+
+.search-bar-enhanced button[type="submit"]:disabled {
+  background: #e5e7eb;
+  color: #a1a1aa;
+  cursor: not-allowed;
+}

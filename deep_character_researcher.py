@@ -17,6 +17,7 @@ class CharacterProfile:
     research_domains: List[str]
     personality_traits: List[str]
     historical_context: Dict[str, str]
+    contemporaries: List[str]
 
 class DeepCharacterResearcher:
     def __init__(self, config: ResearchConfig):
@@ -136,14 +137,14 @@ class DeepCharacterResearcher:
         profile = await self.character_engine.create_character_embodiment(
             character_name, provider
         )
-        
         return CharacterProfile(
             name=character_name,
             time_period=profile.get('historical_context', {}).get('time_period', 'Unknown'),
             known_roles=profile.get('knowledge_domains', []),
             research_domains=profile.get('knowledge_domains', []),
             personality_traits=profile.get('personality', {}).get('traits', []),
-            historical_context=profile.get('historical_context', {})
+            historical_context=profile.get('historical_context', {}),
+            contemporaries=profile.get('contemporaries', [])
         )
     
     async def _discover_character_basics(self, character_name: str) -> Dict:
@@ -273,6 +274,17 @@ class DeepCharacterResearcher:
         else:
             print(f"  ⚠️  No documents to add to vector database")
     
+    def filter_characters_by_profession(self, profession: str) -> List[CharacterProfile]:
+        """
+        Filter stored characters by profession (known_roles).
+        This is a backend utility; actual storage/retrieval logic may need to be adapted.
+        """
+        profiles = self.doc_store.get_all_character_profiles()  # Assumes such a method exists
+        return [
+            profile for profile in profiles
+            if profession.lower() in (role.lower() for role in profile.known_roles)
+        ]
+
     async def cleanup(self):
         """Cleanup resources"""
         await self.ai_manager.close_all()

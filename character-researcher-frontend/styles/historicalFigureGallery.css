@@ -1,0 +1,93 @@
+.historical-figure-gallery {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.era-filter {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem 1.5rem;
+  margin-bottom: 1.5rem;
+  background: rgba(26,26,46,0.15);
+  border-radius: 16px;
+  padding: 1rem 0.5rem;
+  box-shadow: 0 2px 8px rgba(77,238,234,0.05);
+}
+
+.era-button {
+  font-family: var(--font-serif);
+  font-size: 0.95rem;
+  border-radius: 20px;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0.5rem 1.25rem;
+  margin: 0 0.25rem;
+  border: 1.5px solid var(--color-electric-blue);
+  background: linear-gradient(90deg, var(--color-brass) 60%, var(--color-electric-blue) 100%);
+  color: #222;
+  box-shadow: 0 2px 8px rgba(77,238,234,0.08);
+  transition: background 0.2s, color 0.2s, border 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+  outline: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.era-button:hover:not(:disabled), .era-button:focus-visible {
+  background: linear-gradient(90deg, var(--color-electric-blue) 60%, var(--color-brass) 100%);
+  color: #111;
+  border-color: var(--color-brass-light);
+  outline: none;
+  box-shadow: 0 4px 16px rgba(77,238,234,0.18);
+}
+
+.era-button:disabled, .era-button[aria-disabled="true"] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: linear-gradient(90deg, #bbb 60%, #eee 100%);
+  color: #888;
+  border-color: #bbb;
+}
+
+.era-button.active {
+  background: linear-gradient(90deg, var(--color-electric-blue) 60%, var(--color-brass) 100%);
+  color: #111;
+  border-color: var(--color-brass-light);
+  font-weight: bold;
+}
+
+.era-button:hover {
+  background-color: rgba(184, 115, 51, 0.2);
+}
+
+.era-button.active {
+  background-color: var(--color-brass);
+  color: var(--color-text-dark);
+}
+
+.figures-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.5rem;
+  width: 100%;
+}
+
+/* Responsive adjustments */
+@media (min-width: 768px) {
+  .era-filter {
+    gap: 0.75rem;
+  }
+  
+  .era-button {
+    font-size: 1rem;
+  }
+  
+  .figures-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2rem;
+  }
+}

@@ -96,10 +96,18 @@ async def get_research_result(task_id: str):
 async def get_characters(
     start_time: Optional[str] = Query(None, description="Filter by created_at >= start_time (ISO 8601)"),
     end_time: Optional[str] = Query(None, description="Filter by created_at <= end_time (ISO 8601)"),
-    type: Optional[str] = Query(None, description="Filter by document source_type")
+    type: Optional[str] = Query(None, description="Filter by document source_type"),
+    profession: Optional[str] = Query(None, description="Filter by profession (matches known_roles)")
 ):
     """
-    Returns a list of researched characters, optionally filtered by start_time, end_time, and type.
+    Returns a list of researched characters, optionally filtered by start_time, end_time, type, and profession.
+
+    Each character object includes:
+    - id: Character ID
+    - name: Character name
+    - created_at: Creation timestamp
+    - known_roles: List of professions/roles (aggregated from document metadata)
+    - contemporaries: List of contemporary character names (if available)
     """
     try:
         config = get_config_from_env()
@@ -110,7 +118,49 @@ async def get_characters(
             end_time=end_time,
             doc_type=type
         )
-        return {"characters": characters}
+
+        enriched_characters = []
+        # Build a mapping of character id to name for contemporaries lookup
+        id_to_name = {c["id"]: c["name"] for c in characters}
+
+        for char in characters:
+            name = char["name"]
+            # Fetch all documents for this character
+            docs = store.get_character_documents(name)
+            # Aggregate known_roles and contemporaries from metadata
+            known_roles = set()
+            contemporaries = set()
+            for doc in docs:
+                meta = doc.get("metadata", {})
+                # Extract known_roles from metadata if present
+                roles = meta.get("known_roles") or meta.get("roles") or []
+                if isinstance(roles, str):
+                    # Handle comma-separated string
+                    roles = [r.strip() for r in roles.split(",") if r.strip()]
+                known_roles.update(roles)
+                # Extract contemporaries from metadata if present
+                cont = meta.get("contemporaries") or []
+                if isinstance(cont, str):
+                    cont = [c.strip() for c in cont.split(",") if c.strip()]
+                contemporaries.update(cont)
+            # Optionally, filter out empty strings
+            known_roles = [r for r in known_roles if r]
+            contemporaries = [c for c in contemporaries if c and c != name]
+
+            # If profession filter is set, skip if not present in known_roles
+            if profession:
+                if not any(profession.lower() in r.lower() for r in known_roles):
+                    continue
+
+            enriched_characters.append({
+                "id": char["id"],
+                "name": name,
+                "created_at": char["created_at"],
+                "known_roles": known_roles,
+                "contemporaries": contemporaries
+            })
+
+        return {"characters": enriched_characters}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to fetch characters: {e}")
 

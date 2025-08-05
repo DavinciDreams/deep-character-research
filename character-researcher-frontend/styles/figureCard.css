@@ -1,0 +1,157 @@
+.figure-card {
+  background-color: rgba(26, 26, 46, 0.5);
+  border: 1px solid var(--color-brass);
+  border-radius: 10px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  outline: none;
+}
+
+.figure-card:focus-visible, .figure-card:focus-within {
+  border-color: var(--color-electric-blue);
+  box-shadow: 0 0 0 3px rgba(77,238,234,0.25);
+}
+
+.figure-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  border-color: var(--color-electric-blue);
+}
+
+.figure-card:active {
+  transform: scale(0.98);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.unified-btn {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 1rem;
+  border-radius: 5px;
+  border: 1.5px solid var(--color-electric-blue);
+  background: linear-gradient(90deg, var(--color-brass) 60%, var(--color-electric-blue) 100%);
+  color: #222;
+  box-shadow: 0 2px 8px rgba(77,238,234,0.08);
+  transition: background 0.2s, color 0.2s, border 0.2s, box-shadow 0.2s;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0.75rem 1.5rem;
+  cursor: pointer;
+  outline: none;
+}
+
+.unified-btn:hover:not(:disabled), .unified-btn:focus-visible {
+  background: linear-gradient(90deg, var(--color-electric-blue) 60%, var(--color-brass) 100%);
+  color: #111;
+  border-color: var(--color-brass-light);
+  outline: none;
+  box-shadow: 0 4px 16px rgba(77,238,234,0.18);
+}
+
+.unified-btn:disabled, .unified-btn[aria-disabled="true"] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: linear-gradient(90deg, #bbb 60%, #eee 100%);
+  color: #888;
+  border-color: #bbb;
+}
+
+.figure-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  border-color: var(--color-electric-blue);
+}
+
+.figure-portrait {
+  height: 180px;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  border-bottom: 1px solid var(--color-brass);
+}
+
+.figure-era {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  background-color: rgba(26, 26, 46, 0.8);
+  border: 1px solid var(--color-brass);
+  border-radius: 20px;
+  padding: 0.25rem 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--color-brass-light);
+}
+
+.figure-info {
+  padding: 1.25rem;
+}
+
+.figure-name {
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  margin-bottom: 0.25rem;
+  color: var(--color-brass-light);
+}
+
+.figure-years {
+  font-size: 0.9rem;
+  color: var(--color-text-light);
+  opacity: 0.8;
+  margin-bottom: 0.75rem;
+}
+
+.figure-description {
+  font-size: 0.9rem;
+  line-height: 1.4;
+  opacity: 0.9;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.connection-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0 1.25rem 0.5rem;
+  font-size: 0.8rem;
+  color: var(--color-text-light);
+  opacity: 0.7;
+}
+
+.status-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.status-indicator.available {
+  background-color: #4CAF50;
+  box-shadow: 0 0 5px #4CAF50;
+}
+
+.connect-button {
+  width: calc(100% - 2.5rem);
+  margin: 0 1.25rem 1.25rem;
+  padding: 0.75rem;
+  background-color: transparent;
+  border: 1px solid var(--color-electric-blue);
+  color: var(--color-electric-blue);
+  border-radius: 5px;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.connect-button:hover {
+  background-color: var(--color-electric-blue);
+  color: var(--color-text-dark);
+}
