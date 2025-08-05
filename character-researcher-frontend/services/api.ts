@@ -8,6 +8,7 @@ import {
   Document,
   ChatHistory,
   UserSearch,
+  HistoricalFigure,
 } from '../types/types';
 
 /**
@@ -226,4 +227,13 @@ export async function getUserSearch(id: number): Promise<UserSearch> {
 export async function deleteUserSearch(id: number): Promise<void> {
   const res = await fetch(`${API_URL}/api/user_searches/${id}`, { method: 'DELETE' });
   if (!res.ok) throw new Error(`Failed to delete user search: ${res.statusText}`);
+}
+
+// Search users by query string
+export async function searchUsers(query: string): Promise<UserSearch[]> {
+  const params = new URLSearchParams();
+  if (query) params.append('query', query);
+  const res = await fetch(`${API_URL}/api/user_searches?${params.toString()}`);
+  if (!res.ok) throw new Error(`Failed to search users: ${res.statusText}`);
+  return res.json() as Promise<UserSearch[]>;
 }

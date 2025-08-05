@@ -24,6 +24,12 @@ class AIConfig:
             self.openai_api_key = os.getenv("OPENAI_API_KEY")
         if self.openrouter_api_key is None:
             self.openrouter_api_key = os.getenv("OPENROUTER_API_KEY")
+        # Log masked OpenRouter API key at startup
+        if self.openrouter_api_key:
+            masked = '*' * (len(self.openrouter_api_key) - 4) + self.openrouter_api_key[-4:]
+            logging.info(f"OpenRouter API key loaded: {masked}")
+        else:
+            logging.warning("OpenRouter API key not set.")
         if self.anthropic_api_key is None:
             self.anthropic_api_key = os.getenv("ANTHROPIC_API_KEY")
         if self.lmstudio_base_url is None:
@@ -169,6 +175,12 @@ class OpenRouterProvider(BaseAIProvider):
                 "Authorization": f"Bearer {self.api_key}",
                 "Content-Type": "application/json"
             }
+            # Log headers with masked API key
+            masked_key = '*' * (len(self.api_key) - 4) + self.api_key[-4:] if self.api_key else None
+            logged_headers = dict(headers)
+            if masked_key:
+                logged_headers["Authorization"] = f"Bearer {masked_key}"
+            logging.info(f"OpenRouter request headers: {logged_headers}")
             
             async with session.get(f"{self.base_url}/models", headers=headers) as response:
                 if response.status == 200:
@@ -192,6 +204,12 @@ class OpenRouterProvider(BaseAIProvider):
                 "Authorization": f"Bearer {self.api_key}",
                 "Content-Type": "application/json"
             }
+            # Log headers with masked API key
+            masked_key = '*' * (len(self.api_key) - 4) + self.api_key[-4:] if self.api_key else None
+            logged_headers = dict(headers)
+            if masked_key:
+                logged_headers["Authorization"] = f"Bearer {masked_key}"
+            logging.info(f"OpenRouter request headers: {logged_headers}")
             
             data = {
                 "model": model,

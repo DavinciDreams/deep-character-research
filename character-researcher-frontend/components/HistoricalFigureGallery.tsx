@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { HistoricalFigure, CharacterSearchFilters } from '../types/types';
 import FigureCard from './FigureCard';
 // import '../src/styles/historicalFigureGallery.css'; // Moved to _app.tsx for Next.js global CSS compliance
-import { getCharacters, createCharacter, deleteCharacter, updateCharacter } from '../services/api';
+import { getCharacters, createCharacter, deleteCharacter, updateCharacter, searchUsers } from '../services/api';
 
 export interface HistoricalFigureGalleryProps {
   onSelectFigure: (figure: HistoricalFigure) => void;
@@ -51,18 +51,27 @@ const HistoricalFigureGallery: React.FC<HistoricalFigureGalleryProps> = React.me
       }
       const fetchFigures = async () => {
         try {
-          const data = await getCharacters({
-            era: effectiveSearchFields.era || selectedEra || undefined,
-            type: selectedType && selectedType !== 'All Types' ? selectedType : undefined,
-            profession: selectedProfession && selectedProfession !== 'All Professions' ? selectedProfession : undefined,
-            name: effectiveSearchFields.name || undefined,
-            field: effectiveSearchFields.field || undefined,
-            keywords: effectiveSearchFields.description || undefined
-          });
-          setFigures(data.characters);
-          cacheRef.current[cacheKey] = data.characters;
-          setEras(Array.from(new Set(data.characters.map((f: HistoricalFigure) => f.era))));
-          setProfessions(Array.from(new Set(data.characters.map((f: any) => f.profession).filter(Boolean))));
+          let figuresData: HistoricalFigure[] = [];
+          // If searching by user name, use user search API
+          if (effectiveSearchFields.name && effectiveSearchFields.name.trim() !== '') {
+            const users = await searchUsers(effectiveSearchFields.name.trim());
+            // Map UserSearch results to HistoricalFigure shape if needed, or display as-is if compatible
+            figuresData = users as unknown as HistoricalFigure[];
+          } else {
+            const data = await getCharacters({
+              era: effectiveSearchFields.era || selectedEra || undefined,
+              type: selectedType && selectedType !== 'All Types' ? selectedType : undefined,
+              profession: selectedProfession && selectedProfession !== 'All Professions' ? selectedProfession : undefined,
+              name: effectiveSearchFields.name || undefined,
+              field: effectiveSearchFields.field || undefined,
+              keywords: effectiveSearchFields.description || undefined
+            });
+            figuresData = data.characters;
+          }
+          setFigures(figuresData);
+          cacheRef.current[cacheKey] = figuresData;
+          setEras(Array.from(new Set(figuresData.map((f: HistoricalFigure) => f.era))));
+          setProfessions(Array.from(new Set(figuresData.map((f: any) => f.profession).filter(Boolean))));
         } catch (err) {
           setFigures([]);
           setProfessions([]);
@@ -79,6 +88,9 @@ const HistoricalFigureGallery: React.FC<HistoricalFigureGalleryProps> = React.me
 
   // No longer filter by searchQuery; backend handles filtering
   const filteredFigures = figures;
+
+  // Only show filters if showFilters is true AND gallery data is loaded and non-empty
+  const shouldShowFilters = showFilters && filteredFigures.length > 0 && !loading;
 
   return (
     <div className="w-full flex flex-col gap-8">
@@ -163,7 +175,7 @@ const HistoricalFigureGallery: React.FC<HistoricalFigureGalleryProps> = React.me
           </button>
         </div>
       )}
-      {showFilters && (
+      {shouldShowFilters && (
         <div className="flex flex-wrap justify-center gap-2 mb-4">
           <button
             className={`unified-btn era-button${selectedEra === null ? ' active' : ''}`}
